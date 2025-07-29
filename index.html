@@ -1,71 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Puthal - Mental Health Reimagined</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puthal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="logo">Puthal</div>
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="logo">
+        <img src="logo.jpg" alt="Puthal Logo" class="logo-img">
+        <span class="logo-text">Puthal</span>
+      </div>
       <nav>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Features</a>
-        <a href="#">Join Us</a>
-        <a href="#">Contact</a>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Join Us</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
       </nav>
     </div>
   </header>
 
   <section class="hero">
-    <div class="container">
+    <div class="container hero-content">
       <div class="hero-text">
-        <h1>Mental Health<br><span>Well-being Reimagined</span></h1>
+        <h1>Mental Health<br>Well-being<br>Reimagined</h1>
         <p>Empowering individuals to prioritize their mental well-being through innovative technology.</p>
-        <div class="store-buttons">
-          <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Apple_logo_black.svg" alt="">App Store</a>
-          <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="">Google Play</a>
+        <div class="app-buttons">
+          <a href="#" class="btn appstore">App Store</a>
+          <a href="#" class="btn playstore">Google Play</a>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="mobile-preview">
-          <p class="app-name">Puthal</p>
-          <p>Welcome back</p>
-          <p class="question">How are you feeling?</p>
-          <div class="mood-icons">
-            <span>😔</span>
-            <span>😐</span>
-            <span>🙂</span>
-            <span>😄</span>
-          </div>
-          <div class="meditate-icon">🧘‍♂️</div>
-        </div>
-      </div>
-    </div>
+                  <div class="phone-mockup">
+                <div class="smartphone-frame">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>1:30</span>
+                            <span>📶 📶 📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="app-header">
+                            <img src="logo.jpg" alt="Puthal" width="30" height="30">
+                            <h3>Puthal</h3>
+                        </div>
+                    
+                        <div class="welcome-section">
+                            <h4>Welcome back</h4>
+                            <p>How are you feeling?</p>
+                        </div>
+                    
+                        <div class="mood-grid">
+                            <div class="mood-btn">
+                                <span class="emoji">😔</span>
+                                <span>Sad</span>
+                            </div>
+                            <div class="mood-btn">
+                                <span class="emoji">😐</span>
+                                <span>Normal</span>
+                            </div>
+                            <div class="mood-btn">
+                                <span class="emoji">😰</span>
+                                <span>Scared</span>
+                            </div>
+                            <div class="mood-btn">
+                                <span class="emoji">😊</span>
+                                <span>Happy</span>
+                            </div>
+                        </div>
+                        
+                        <div class="meditation-card">
+                            <span class="meditation-icon">🧘‍♀️</span>
+                            <p>Start your mindfulness journey</p>
+                            <small>Tap to begin meditation</small>
+                        </div>
+                        
+                        <div class="bottom-nav">
+                            <div class="nav-item">
+                                <span class="icon">🏠</span>
+                                <span>Home</span>
+                            </div>
+                            <div class="nav-item">
+                                <span class="icon">📊</span>
+                                <span>Track</span>
+                            </div>
+                            <div class="nav-item">
+                                <span class="icon">🧘</span>
+                                <span>Meditate</span>
+                            </div>
+                            <div class="nav-item">
+                                <span class="icon">👤</span>
+                                <span>Profile</span>
+                            </div>
+                        </div>
   </section>
 
   <section class="features">
-    <div class="container">
-      <div class="feature-block">
+    <div class="container features-grid">
+      <div class="feature-card">
         <div class="icon">🧠</div>
         <h3>AI Mood Tracking</h3>
         <p>AI-driven mood monitoring</p>
       </div>
-      <div class="feature-block">
-        <div class="icon">🌿</div>
+      <div class="feature-card">
+        <div class="icon">🪷</div>
         <h3>Mindfulness Exercises</h3>
         <p>Exercises for inner peace</p>
       </div>
-      <div class="feature-block">
+      <div class="feature-card">
         <div class="icon">➕</div>
         <h3>Therapy & Counseling</h3>
         <p>Professional support & resources</p>
       </div>
-      <div class="feature-block">
-        <div class="icon">🤝</div>
+      <div class="feature-card">
+        <div class="icon">👥</div>
         <h3>Community Support</h3>
         <p>Connect with others</p>
       </div>
