@@ -148,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Show welcome bar and navbar user
       const welcomeBar = document.getElementById('welcomeBar');
       const navbarUser = document.getElementById('navbarUser');
+      const loginBtn = document.querySelector('.login-btn');
       if (welcomeBar) {
         welcomeBar.innerHTML = `<span class='success-tick'>✔️</span> Welcome, ${userCredential.user.displayName || "User"}!`;
         welcomeBar.style.display = 'block';
@@ -155,6 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (navbarUser) {
         navbarUser.textContent = userCredential.user.displayName || "User";
         navbarUser.style.display = 'block';
+      }
+      if (loginBtn) {
+        loginBtn.style.display = 'none';
       }
       setTimeout(() => {
         // Hide login modal if present
@@ -189,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("onAuthStateChanged user:", user);
     const welcomeBar = document.getElementById('welcomeBar');
     const navbarUser = document.getElementById('navbarUser');
+    const loginBtn = document.querySelector('.login-btn');
     if (user) {
       showDashboard();
       // Optionally show welcome message
@@ -209,10 +214,16 @@ document.addEventListener("DOMContentLoaded", () => {
         navbarUser.textContent = user.displayName || "User";
         navbarUser.style.display = 'block';
       }
+      if (loginBtn) {
+        loginBtn.style.display = 'none';
+      }
     } else {
       hideDashboard();
       if (welcomeBar) welcomeBar.style.display = 'none';
       if (navbarUser) navbarUser.style.display = 'none';
+      if (loginBtn) {
+        loginBtn.style.display = '';
+      }
     }
   });
   if (logoutBtn) {
