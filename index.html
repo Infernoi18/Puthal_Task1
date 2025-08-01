@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puthal</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDKs (add your config as needed) -->
+   <script src="work.js"></script>
+  <!-- Add Firebase Auth and other required modules here -->
 </head>
 <body>
   <header class="navbar">
@@ -20,9 +23,21 @@
           <li><a href="#">Features</a></li>
           <li><a href="#">Join Us</a></li>
           <li><a href="#">Contact</a></li>
+          <li class="nav-item login-btn">
+            <a href="#" class="nav-link" id="openLoginModal">Login</a>
+          </li>
         </ul>
       </nav>
+      <div id="navbarUser" class="navbar-user" style="display:none;"></div>
+      <!-- Hamburger Menu Button -->
+      <button class="menu-toggle" aria-label="Toggle Navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
     </div>
+  <!-- Welcome bar for logged-in user -->
+  <div id="welcomeBar" class="welcome-bar" style="display:none;"></div>
   </header>
 
   <section class="hero">
@@ -35,67 +50,66 @@
           <a href="#" class="btn playstore">Google Play</a>
         </div>
       </div>
-                  <div class="phone-mockup">
-                <div class="smartphone-frame">
-                    <div class="phone-screen">
-                        <div class="status-bar">
-                            <span>1:30</span>
-                            <span>📶 📶 📶 🔋 100%</span>
-                        </div>
-                        
-                        <div class="app-header">
-                            <img src="logo.jpg" alt="Puthal" width="30" height="30">
-                            <h3>Puthal</h3>
-                        </div>
-                    
-                        <div class="welcome-section">
-                            <h4>Welcome back</h4>
-                            <p>How are you feeling?</p>
-                        </div>
-                    
-                        <div class="mood-grid">
-                            <div class="mood-btn">
-                                <span class="emoji">😔</span>
-                                <span>Sad</span>
-                            </div>
-                            <div class="mood-btn">
-                                <span class="emoji">😐</span>
-                                <span>Normal</span>
-                            </div>
-                            <div class="mood-btn">
-                                <span class="emoji">😰</span>
-                                <span>Scared</span>
-                            </div>
-                            <div class="mood-btn">
-                                <span class="emoji">😊</span>
-                                <span>Happy</span>
-                            </div>
-                        </div>
-                        
-                        <div class="meditation-card">
-                            <span class="meditation-icon">🧘‍♀️</span>
-                            <p>Start your mindfulness journey</p>
-                            <small>Tap to begin meditation</small>
-                        </div>
-                        
-                        <div class="bottom-nav">
-                            <div class="nav-item">
-                                <span class="icon">🏠</span>
-                                <span>Home</span>
-                            </div>
-                            <div class="nav-item">
-                                <span class="icon">📊</span>
-                                <span>Track</span>
-                            </div>
-                            <div class="nav-item">
-                                <span class="icon">🧘</span>
-                                <span>Meditate</span>
-                            </div>
-                            <div class="nav-item">
-                                <span class="icon">👤</span>
-                                <span>Profile</span>
-                            </div>
-                        </div>
+      <div class="phone-mockup">
+        <div class="smartphone-frame">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span>1:30</span>
+              <span>📶 📶 📶 🔋 100%</span>
+            </div>
+            <div class="app-header">
+              <img src="logo.jpg" alt="Puthal" width="30" height="30">
+              <h3>Puthal</h3>
+            </div>
+            <div class="welcome-section">
+              <h4>Welcome back</h4>
+              <p>How are you feeling?</p>
+            </div>
+            <div class="mood-grid">
+              <div class="mood-btn">
+                <span class="emoji">😊</span>
+                <span>Happy</span>
+              </div>
+              <div class="mood-btn">
+                <span class="emoji">😐</span>
+                <span>Normal</span>
+              </div>
+              <div class="mood-btn">
+                <span class="emoji">😔</span>
+                <span>Sad</span>
+              </div>
+              <div class="mood-btn">
+                <span class="emoji">😰</span>
+                <span>Scared</span>
+              </div>
+            </div>
+            <div class="meditation-card">
+              <span class="meditation-icon">🧘‍♀️</span>
+              <p>Start your mindfulness journey</p>
+              <small>Tap to begin meditation</small>
+            </div>
+            <div class="bottom-nav">
+              <div class="nav-item">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="nav-item">
+                <span class="icon">📊</span>
+                <span>Track</span>
+              </div>
+              <div class="nav-item">
+                <span class="icon">🧘</span>
+                <span>Meditate</span>
+              </div>
+              <div class="nav-item">
+                <span class="icon">👤</span>
+                <span>Profile</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="features">
@@ -122,5 +136,178 @@
       </div>
     </div>
   </section>
+
+
+
+
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeLoginModal">&times;</span>
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <label><input type="checkbox" id="rememberMe" /> Remember Me</label>
+      <button type="submit">Login</button>
+      <p id="loginMessage"></p>
+    </form>
+    <div class="or-separator">
+      <span>or</span>
+    </div>
+    <button id="googleSignInBtn" class="google-signin-btn">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Sign in with Google
+    </button>
+    <div class="switch-auth">Don't have an account? <a href="#" id="openSignupModal">Sign up</a></div>
+  </div>
+</div>
+
+
+<div id="signupModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeSignupModal">&times;</span>
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+      <input type="text" id="signupName" placeholder="Name" required />
+      <input type="email" id="signupEmail" placeholder="Email" required />
+      <input type="password" id="signupPassword" placeholder="Password (min 8 chars)" required />
+      <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required />
+      <button type="submit">Sign Up</button>
+      <p id="signupMessage"></p>
+    </form>
+    <div class="switch-auth">Already have an account? <a href="#" id="openLoginModalFromSignup">Login</a></div>
+  </div>
+</div>
+
+<div id="dashboardSection" class="dashboard-section">
+  <div class="container">
+    <h2>Welcome to your Dashboard!</h2>
+    <div class="dashboard-moods">
+      <div class="dashboard-mood-block happy">
+        <span class="dashboard-emoji">😊</span>
+        <span class="dashboard-mood-label">Happy</span>
+      </div>
+      <div class="dashboard-mood-block neutral">
+        <span class="dashboard-emoji">😐</span>
+        <span class="dashboard-mood-label">Neutral</span>
+      </div>
+      <div class="dashboard-mood-block sad">
+        <span class="dashboard-emoji">😔</span>
+        <span class="dashboard-mood-label">Sad</span>
+      </div>
+      <div class="dashboard-mood-block angry">
+        <span class="dashboard-emoji">😠</span>
+        <span class="dashboard-mood-label">Angry</span>
+      </div>
+    </div>
+    <button id="logoutBtn" class="dashboard-logout-btn">Logout</button>
+  </div>
+</div>
+
+  <footer id="contact">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section about-section">
+          <h3>Puthal</h3>
+          <p>
+            Empowering mental wellness through innovative technology.<br>
+            Your journey to better mental health starts here.
+          </p>
+        </div>
+        <div class="footer-section quick-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#join">Join Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-section support-links">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="mailto:support@puthal.com">Contact Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-section connect-links">
+          <h3>Connect</h3>
+          <ul>
+            <li>
+              <a href="https://www.linkedin.com/company/theputhal/">
+                <span class="icon-linkedin"></span> LinkedIn
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/theputhal/">
+                <span class="icon-instagram"></span> Instagram
+              </a>
+            </li>
+            <li>
+              <a href="mailto:info@puthal.com">
+                <span class="icon-mail"></span> Email Us
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Puthal. All rights reserved. Made with ❤️ for mental wellness.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="work.js"></script>
+  <script>
+    // Modal open/close logic for login and signup
+    document.addEventListener('DOMContentLoaded', function() {
+      var closeLoginBtn = document.getElementById('closeLoginModal');
+      var loginModal = document.getElementById('loginModal');
+      var openSignupLink = document.getElementById('openSignupModal');
+      var signupModal = document.getElementById('signupModal');
+      var closeSignupBtn = document.getElementById('closeSignupModal');
+      var openLoginFromSignup = document.getElementById('openLoginModalFromSignup');
+
+      // Open signup modal from login
+      if (openSignupLink && signupModal && loginModal) {
+        openSignupLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          loginModal.style.display = 'none';
+          signupModal.style.display = 'flex';
+        });
+      }
+      // Open login modal from signup
+      if (openLoginFromSignup && signupModal && loginModal) {
+        openLoginFromSignup.addEventListener('click', function(e) {
+          e.preventDefault();
+          signupModal.style.display = 'none';
+          loginModal.style.display = 'flex';
+        });
+      }
+      // Close login modal
+      if (closeLoginBtn && loginModal) {
+        closeLoginBtn.addEventListener('click', function() {
+          loginModal.style.display = 'none';
+        });
+      }
+      // Close signup modal
+      if (closeSignupBtn && signupModal) {
+        closeSignupBtn.addEventListener('click', function() {
+          signupModal.style.display = 'none';
+        });
+      }
+      // Close modals when clicking outside content
+      window.addEventListener('click', function(event) {
+        if (event.target === loginModal) {
+          loginModal.style.display = 'none';
+        }
+        if (event.target === signupModal) {
+          signupModal.style.display = 'none';
+        }
+      });
+    });
+  </script>
+  <script src="login.js" type="module"></script>
 </body>
 </html>
