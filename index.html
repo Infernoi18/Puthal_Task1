@@ -299,31 +299,48 @@
       const profileForm = document.getElementById('profileForm');
       const profileName = document.getElementById('profileName');
       const profileBio = document.getElementById('profileBio');
+      const loginModal = document.getElementById('loginModal');
+      const openLoginModalBtn = document.getElementById('openLoginModal');
 
-      // Open modal on profile button or username click
-      function openProfileModal() {
+      // Open login modal from navbar
+      if (openLoginModalBtn && loginModal) {
+        openLoginModalBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          loginModal.style.display = 'flex';
+        });
+      }
+
+      // Open profile modal on profile button or username click
+      function openProfileModal(e) {
+        // Only open if not clicking on a modal overlay
+        if (profileModal.style.display === 'flex') return;
         profileModal.style.display = 'flex';
         // Load current name and bio from localStorage (or default)
-        profileName.value = localStorage.getItem('profileName') || navbarUser.textContent || 'User';
+        profileName.value = localStorage.getItem('profileName') || (navbarUser ? navbarUser.textContent : '') || 'User';
         profileBio.value = localStorage.getItem('profileBio') || '';
         // Load profile image
-        const imgSrc = localStorage.getItem('profileImg') || (document.getElementById('dummyProfileImg') ? document.getElementById('dummyProfileImg').src : profileModalImg.src);
+        const imgSrc = localStorage.getItem('profileImg') || (dummyProfileImg ? dummyProfileImg.src : profileModalImg.src);
         profileModalImg.src = imgSrc;
+        if (e) e.stopPropagation();
       }
       if (dummyProfileBtn) dummyProfileBtn.addEventListener('click', openProfileModal);
       if (navbarUser) navbarUser.addEventListener('click', openProfileModal);
 
-      // Close modal
-      if (closeProfileModal) closeProfileModal.addEventListener('click', function() {
+      // Close profile modal
+      if (closeProfileModal) closeProfileModal.addEventListener('click', function(e) {
         profileModal.style.display = 'none';
+        e.stopPropagation();
       });
-      window.addEventListener('click', function(event) {
-        if (event.target === profileModal) profileModal.style.display = 'none';
-      });
-
+      // Only close profile modal when clicking outside modal-content
+      if (profileModal) {
+        profileModal.addEventListener('click', function(event) {
+          if (event.target === profileModal) profileModal.style.display = 'none';
+        });
+      }
 
       // Edit profile image
-      if (editProfileImgBtn) editProfileImgBtn.addEventListener('click', function() {
+      if (editProfileImgBtn) editProfileImgBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
         profileImgInput.click();
       });
       if (profileImgInput) profileImgInput.addEventListener('change', function(e) {
@@ -334,7 +351,6 @@
             const imgData = evt.target.result;
             localStorage.setItem('profileImg', imgData);
             profileModalImg.src = imgData;
-            const dummyProfileImg = document.getElementById('dummyProfileImg');
             if (dummyProfileImg) dummyProfileImg.src = imgData;
           };
           reader.readAsDataURL(file);
@@ -344,15 +360,12 @@
       // Remove profile image
       const removeProfileImgBtn = document.getElementById('removeProfileImgBtn');
       if (removeProfileImgBtn) {
-        removeProfileImgBtn.addEventListener('click', function() {
-          // Remove from localStorage
+        removeProfileImgBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
           localStorage.removeItem('profileImg');
-          // Reset modal image to default
           const name = profileName.value || (navbarUser ? navbarUser.textContent : '') || 'User';
           const defaultImg = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7b6cf6&color=fff`;
           profileModalImg.src = defaultImg;
-          // Also update dummy profile photo in navbar if present
-          const dummyProfileImg = document.getElementById('dummyProfileImg');
           if (dummyProfileImg) dummyProfileImg.src = defaultImg;
         });
       }
@@ -362,7 +375,7 @@
         e.preventDefault();
         localStorage.setItem('profileName', profileName.value);
         localStorage.setItem('profileBio', profileBio.value);
-        navbarUser.textContent = profileName.value;
+        if (navbarUser) navbarUser.textContent = profileName.value;
         profileModal.style.display = 'none';
       });
     });
