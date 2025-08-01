@@ -194,6 +194,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const welcomeBar = document.getElementById('welcomeBar');
     const navbarUser = document.getElementById('navbarUser');
     const loginBtn = document.querySelector('.login-btn');
+    const loginModal = document.getElementById('loginModal');
+    const signupModal = document.getElementById('signupModal');
+    const dummyProfileBtn = document.getElementById('dummyProfileBtn');
+    const dummyProfileImg = document.getElementById('dummyProfileImg');
     if (user) {
       showDashboard();
       // Optionally show welcome message
@@ -217,12 +221,28 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loginBtn) {
         loginBtn.style.display = 'none';
       }
+      if (loginModal) {
+        loginModal.style.display = 'none';
+      }
+      if (signupModal) {
+        signupModal.style.display = 'none';
+      }
+      // Show dummy profile photo to the left of the name
+      if (dummyProfileBtn && dummyProfileImg) {
+        dummyProfileBtn.style.display = 'flex';
+        // Use localStorage profileImg if set, else default avatar
+        const imgSrc = localStorage.getItem('profileImg') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=7b6cf6&color=fff`;
+        dummyProfileImg.src = imgSrc;
+      }
     } else {
       hideDashboard();
       if (welcomeBar) welcomeBar.style.display = 'none';
       if (navbarUser) navbarUser.style.display = 'none';
       if (loginBtn) {
         loginBtn.style.display = '';
+      }
+      if (dummyProfileBtn) {
+        dummyProfileBtn.style.display = 'none';
       }
     }
   });

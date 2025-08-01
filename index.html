@@ -6,7 +6,6 @@
   <title>Puthal</title>
   <link rel="stylesheet" href="style.css">
   <!-- Firebase SDKs (add your config as needed) -->
-   <script src="work.js"></script>
   <!-- Add Firebase Auth and other required modules here -->
 </head>
 <body>
@@ -28,7 +27,34 @@
           </li>
         </ul>
       </nav>
-      <div id="navbarUser" class="navbar-user" style="display:none;"></div>
+      <div class="navbar-profile-group">
+        <button id="dummyProfileBtn" class="dummy-profile-btn" style="display:none;">
+          <img id="dummyProfileImg" src="https://ui-avatars.com/api/?name=User&background=7b6cf6&color=fff" alt="Profile" class="dummy-profile-img">
+        </button>
+        <div id="navbarUser" class="navbar-user" style="display:none; cursor:pointer;"></div>
+      </div>
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content profile-modal-content">
+      <span class="close-modal" id="closeProfileModal">&times;</span>
+      <h2>Profile</h2>
+      <div class="profile-modal-avatar-section">
+        <img id="profileModalImg" src="https://ui-avatars.com/api/?name=User&background=7b6cf6&color=fff" alt="Profile" class="profile-modal-img">
+        <input type="file" id="profileImgInput" accept="image/*" style="display:none;">
+        <div class="profile-modal-btn-row">
+          <button id="editProfileImgBtn" class="edit-profile-img-btn">Edit Photo</button>
+          <button id="removeProfileImgBtn" class="edit-profile-img-btn remove-profile-img-btn">Remove Photo</button>
+        </div>
+      </div>
+      <form id="profileForm">
+        <label for="profileName">Name</label>
+        <input type="text" id="profileName" name="profileName" required>
+        <label for="profileBio">Bio</label>
+        <textarea id="profileBio" name="profileBio" rows="3" placeholder="Write something about yourself..."></textarea>
+        <button type="submit" class="save-profile-btn">Save</button>
+      </form>
+    </div>
+  </div>
       <!-- Hamburger Menu Button -->
       <button class="menu-toggle" aria-label="Toggle Navigation">
         <span class="bar"></span>
@@ -258,7 +284,89 @@
     </div>
   </footer>
 
-  <script src="work.js"></script>
+  <!-- (Removed duplicate work.js include to prevent double execution) -->
+  <script>
+    // Profile modal logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const dummyProfileBtn = document.getElementById('dummyProfileBtn');
+      const navbarUser = document.getElementById('navbarUser');
+      const profileModal = document.getElementById('profileModal');
+      const closeProfileModal = document.getElementById('closeProfileModal');
+      const editProfileImgBtn = document.getElementById('editProfileImgBtn');
+      const profileImgInput = document.getElementById('profileImgInput');
+      const profileModalImg = document.getElementById('profileModalImg');
+      const dummyProfileImg = document.getElementById('dummyProfileImg');
+      const profileForm = document.getElementById('profileForm');
+      const profileName = document.getElementById('profileName');
+      const profileBio = document.getElementById('profileBio');
+
+      // Open modal on profile button or username click
+      function openProfileModal() {
+        profileModal.style.display = 'flex';
+        // Load current name and bio from localStorage (or default)
+        profileName.value = localStorage.getItem('profileName') || navbarUser.textContent || 'User';
+        profileBio.value = localStorage.getItem('profileBio') || '';
+        // Load profile image
+        const imgSrc = localStorage.getItem('profileImg') || (document.getElementById('dummyProfileImg') ? document.getElementById('dummyProfileImg').src : profileModalImg.src);
+        profileModalImg.src = imgSrc;
+      }
+      if (dummyProfileBtn) dummyProfileBtn.addEventListener('click', openProfileModal);
+      if (navbarUser) navbarUser.addEventListener('click', openProfileModal);
+
+      // Close modal
+      if (closeProfileModal) closeProfileModal.addEventListener('click', function() {
+        profileModal.style.display = 'none';
+      });
+      window.addEventListener('click', function(event) {
+        if (event.target === profileModal) profileModal.style.display = 'none';
+      });
+
+
+      // Edit profile image
+      if (editProfileImgBtn) editProfileImgBtn.addEventListener('click', function() {
+        profileImgInput.click();
+      });
+      if (profileImgInput) profileImgInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const imgData = evt.target.result;
+            localStorage.setItem('profileImg', imgData);
+            profileModalImg.src = imgData;
+            const dummyProfileImg = document.getElementById('dummyProfileImg');
+            if (dummyProfileImg) dummyProfileImg.src = imgData;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Remove profile image
+      const removeProfileImgBtn = document.getElementById('removeProfileImgBtn');
+      if (removeProfileImgBtn) {
+        removeProfileImgBtn.addEventListener('click', function() {
+          // Remove from localStorage
+          localStorage.removeItem('profileImg');
+          // Reset modal image to default
+          const name = profileName.value || (navbarUser ? navbarUser.textContent : '') || 'User';
+          const defaultImg = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7b6cf6&color=fff`;
+          profileModalImg.src = defaultImg;
+          // Also update dummy profile photo in navbar if present
+          const dummyProfileImg = document.getElementById('dummyProfileImg');
+          if (dummyProfileImg) dummyProfileImg.src = defaultImg;
+        });
+      }
+
+      // Save profile form
+      if (profileForm) profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        localStorage.setItem('profileName', profileName.value);
+        localStorage.setItem('profileBio', profileBio.value);
+        navbarUser.textContent = profileName.value;
+        profileModal.style.display = 'none';
+      });
+    });
+  </script>
   <script>
     // Modal open/close logic for login and signup
     document.addEventListener('DOMContentLoaded', function() {
