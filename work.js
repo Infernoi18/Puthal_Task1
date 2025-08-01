@@ -1,6 +1,3 @@
-// work.js - JavaScript for Puthal Homepage
-
-// Hamburger menu toggle for mobile nav
 function setupHamburgerMenu() {
   const menuToggle = document.querySelector('.menu-toggle');
   const navLinks = document.querySelector('.nav-links');
@@ -11,7 +8,7 @@ function setupHamburgerMenu() {
   }
 }
 
-// Navbar link click handlers
+
 function setupNavbarLinks() {
   const navLinks = document.querySelectorAll('.nav-links a');
   navLinks.forEach(link => {
@@ -23,10 +20,10 @@ function setupNavbarLinks() {
         if (loginModal) loginModal.style.display = 'flex';
         return;
       }
-      // For demo: prevent default and highlight
+
       navLinks.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
-      // Optionally scroll to section if using anchors
+
       const href = link.getAttribute('href');
       if (href && href.startsWith('#')) {
         e.preventDefault();
@@ -35,7 +32,7 @@ function setupNavbarLinks() {
       }
     });
   });
-  // Footer quick links
+
   const quickLinks = document.querySelectorAll('.quick-links a');
   quickLinks.forEach(link => {
     link.addEventListener('click', function(e) {
@@ -54,16 +51,16 @@ function setupNavbarLinks() {
   });
 }
 
-// Footer link click handlers
+
 function setupFooterLinks() {
   const footer = document.querySelector('footer');
   if (!footer) return;
-  // About section links
+
   const quickLinks = footer.querySelectorAll('.quick-links a');
   quickLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      // Scroll to section if anchor
+
       const href = link.getAttribute('href');
       if (href && href.startsWith('#')) {
         const section = document.querySelector(href);
@@ -71,21 +68,21 @@ function setupFooterLinks() {
       }
     });
   });
-  // Support section links
+  // SupportLinks
   const supportLinks = footer.querySelectorAll('.support-links a');
   supportLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      // For mailto or external, let default happen
+
       if (!link.href.startsWith('mailto:')) e.preventDefault();
     });
   });
-  // Connect section links
+
   const connectLinks = footer.querySelectorAll('.connect-links a');
   connectLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      // For mailto or external, let default happen
+
       if (!link.href.startsWith('mailto:')) e.preventDefault();
-      // Optionally open in new tab
+
       if (link.href.startsWith('http')) {
         window.open(link.href, '_blank');
       }
@@ -93,7 +90,7 @@ function setupFooterLinks() {
   });
 }
 
-// Auth form handling (demo only)
+// Auth form handling
 function setupAuthForm() {
   const signInForm = document.getElementById('signInForm');
   const authMessage = document.getElementById('authMessage');
@@ -103,7 +100,7 @@ function setupAuthForm() {
       authMessage.textContent = '';
       const email = document.getElementById('signInEmail').value.trim();
       const password = document.getElementById('signInPassword').value;
-      // Demo: just show a message
+  
       if (email && password) {
         authMessage.style.color = '#28a745';
         authMessage.textContent = 'Signed in successfully! (Demo: connect to Firebase)';
@@ -116,7 +113,7 @@ function setupAuthForm() {
 }
 
 
-// Modal login logic (no authentication here)
+
 const loginModal = document.getElementById('loginModal');
 const openLoginModalBtn = document.getElementById('openLoginModal');
 const closeLoginModalBtn = document.getElementById('closeLoginModal');
@@ -136,7 +133,7 @@ window.onclick = function(event) {
   if (event.target === loginModal) loginModal.style.display = 'none';
 };
 
-// Initialize all handlers on DOMContentLoaded
+
 window.addEventListener('DOMContentLoaded', function() {
   setupHamburgerMenu();
   setupNavbarLinks();

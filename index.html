@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puthal</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs (add your config as needed) -->
-  <!-- Add Firebase Auth and other required modules here -->
 </head>
 <body>
   <header class="navbar">
@@ -33,7 +31,7 @@
         </button>
         <div id="navbarUser" class="navbar-user" style="display:none; cursor:pointer;"></div>
       </div>
-  <!-- Profile Modal -->
+
   <div id="profileModal" class="modal">
     <div class="modal-content profile-modal-content">
       <span class="close-modal" id="closeProfileModal">&times;</span>
@@ -62,7 +60,7 @@
         <span class="bar"></span>
       </button>
     </div>
-  <!-- Welcome bar for logged-in user -->
+
   <div id="welcomeBar" class="welcome-bar" style="display:none;"></div>
   </header>
 
@@ -284,9 +282,8 @@
     </div>
   </footer>
 
-  <!-- (Removed duplicate work.js include to prevent double execution) -->
+  
   <script>
-    // Profile modal logic
     document.addEventListener('DOMContentLoaded', function() {
       const dummyProfileBtn = document.getElementById('dummyProfileBtn');
       const navbarUser = document.getElementById('navbarUser');
@@ -302,7 +299,7 @@
       const loginModal = document.getElementById('loginModal');
       const openLoginModalBtn = document.getElementById('openLoginModal');
 
-      // Open login modal from navbar
+
       if (openLoginModalBtn && loginModal) {
         openLoginModalBtn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -310,15 +307,15 @@
         });
       }
 
-      // Open profile modal on profile button or username click
+      
       function openProfileModal(e) {
-        // Only open if not clicking on a modal overlay
+       
         if (profileModal.style.display === 'flex') return;
         profileModal.style.display = 'flex';
-        // Load current name and bio from localStorage (or default)
+
         profileName.value = localStorage.getItem('profileName') || (navbarUser ? navbarUser.textContent : '') || 'User';
         profileBio.value = localStorage.getItem('profileBio') || '';
-        // Load profile image
+
         const imgSrc = localStorage.getItem('profileImg') || (dummyProfileImg ? dummyProfileImg.src : profileModalImg.src);
         profileModalImg.src = imgSrc;
         if (e) e.stopPropagation();
@@ -326,19 +323,19 @@
       if (dummyProfileBtn) dummyProfileBtn.addEventListener('click', openProfileModal);
       if (navbarUser) navbarUser.addEventListener('click', openProfileModal);
 
-      // Close profile modal
+
       if (closeProfileModal) closeProfileModal.addEventListener('click', function(e) {
         profileModal.style.display = 'none';
         e.stopPropagation();
       });
-      // Only close profile modal when clicking outside modal-content
+
       if (profileModal) {
         profileModal.addEventListener('click', function(event) {
           if (event.target === profileModal) profileModal.style.display = 'none';
         });
       }
 
-      // Edit profile image
+
       if (editProfileImgBtn) editProfileImgBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         profileImgInput.click();
@@ -357,7 +354,7 @@
         }
       });
 
-      // Remove profile image
+
       const removeProfileImgBtn = document.getElementById('removeProfileImgBtn');
       if (removeProfileImgBtn) {
         removeProfileImgBtn.addEventListener('click', function(e) {
@@ -370,7 +367,7 @@
         });
       }
 
-      // Save profile form
+
       if (profileForm) profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
         localStorage.setItem('profileName', profileName.value);
@@ -381,7 +378,7 @@
     });
   </script>
   <script>
-    // Modal open/close logic for login and signup
+
     document.addEventListener('DOMContentLoaded', function() {
       var closeLoginBtn = document.getElementById('closeLoginModal');
       var loginModal = document.getElementById('loginModal');
@@ -390,7 +387,7 @@
       var closeSignupBtn = document.getElementById('closeSignupModal');
       var openLoginFromSignup = document.getElementById('openLoginModalFromSignup');
 
-      // Open signup modal from login
+
       if (openSignupLink && signupModal && loginModal) {
         openSignupLink.addEventListener('click', function(e) {
           e.preventDefault();
@@ -398,7 +395,7 @@
           signupModal.style.display = 'flex';
         });
       }
-      // Open login modal from signup
+
       if (openLoginFromSignup && signupModal && loginModal) {
         openLoginFromSignup.addEventListener('click', function(e) {
           e.preventDefault();
@@ -406,19 +403,19 @@
           loginModal.style.display = 'flex';
         });
       }
-      // Close login modal
+
       if (closeLoginBtn && loginModal) {
         closeLoginBtn.addEventListener('click', function() {
           loginModal.style.display = 'none';
         });
       }
-      // Close signup modal
+ 
       if (closeSignupBtn && signupModal) {
         closeSignupBtn.addEventListener('click', function() {
           signupModal.style.display = 'none';
         });
       }
-      // Close modals when clicking outside content
+
       window.addEventListener('click', function(event) {
         if (event.target === loginModal) {
           loginModal.style.display = 'none';

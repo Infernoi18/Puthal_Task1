@@ -31,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const loginMessage = document.getElementById("loginMessage");
   const googleSignInBtn = document.getElementById("googleSignInBtn");
-  // Signup form elements
+
   const signupForm = document.getElementById("signupForm");
   const signupMessage = document.getElementById("signupMessage");
-  // Signup logic
+
   if (signupForm) {
     signupForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -43,13 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("signupPassword")?.value;
       const confirmPassword = document.getElementById("signupConfirmPassword")?.value;
 
-      // Validation
+
       if (!name || !email || !password || !confirmPassword) {
         signupMessage.textContent = "Please fill all fields.";
         signupMessage.style.color = "red";
         return;
       }
-      // Email format
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         signupMessage.textContent = "Invalid email format.";
@@ -68,12 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // Set displayName
+
         await updateProfile(userCredential.user, { displayName: name });
         signupMessage.innerHTML = '<span class="success-tick">✔️</span> Signup successful! Redirecting...';
         signupMessage.style.color = "#28a745";
         setTimeout(() => {
-          // Hide signup modal, show dashboard
+
           const signupModal = document.getElementById('signupModal');
           if (signupModal) signupModal.style.display = 'none';
           const dashboardSection = document.getElementById('dashboardSection');
@@ -95,16 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const provider = new GoogleAuthProvider();
       try {
         const result = await signInWithPopup(auth, provider);
-        // The signed-in user info.
+
         const user = result.user;
         console.log("Google sign-in successful:", user);
         loginMessage.innerHTML = '<span class="success-tick">✔️</span> Google sign-in successful!';
         loginMessage.style.color = "#28a745";
         setTimeout(() => {
-          // Hide login modal if present
+
           const loginModal = document.getElementById('loginModal');
           if (loginModal) loginModal.style.display = 'none';
-          // Show dashboard section
+
           const dashboardSection = document.getElementById('dashboardSection');
           if (dashboardSection) dashboardSection.style.display = 'block';
         }, 1000);
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Set session persistence
+
     try {
       await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
     } catch (err) {
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Login successful:", userCredential.user);
       loginMessage.innerHTML = `<span class='success-tick'>✔️</span> Welcome back, ${userCredential.user.displayName || "User"}!`;
       loginMessage.style.color = "#28a745";
-      // Show welcome bar and navbar user
+
       const welcomeBar = document.getElementById('welcomeBar');
       const navbarUser = document.getElementById('navbarUser');
       const loginBtn = document.querySelector('.login-btn');
@@ -161,13 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
         loginBtn.style.display = 'none';
       }
       setTimeout(() => {
-        // Hide login modal if present
+
         const loginModal = document.getElementById('loginModal');
         if (loginModal) loginModal.style.display = 'none';
         // Show dashboard section
         const dashboardSection = document.getElementById('dashboardSection');
         if (dashboardSection) dashboardSection.style.display = 'block';
-        // Hide green tick after 3 seconds
+
         if (loginMessage) loginMessage.textContent = '';
         if (welcomeBar) welcomeBar.style.display = 'none';
       }, 3000);
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dummyProfileImg = document.getElementById('dummyProfileImg');
     if (user) {
       showDashboard();
-      // Optionally show welcome message
+
       const dashboardSection = document.getElementById('dashboardSection');
       if (dashboardSection) {
         const h2 = dashboardSection.querySelector('h2');
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
           h2.textContent = `Welcome, ${user.displayName}!`;
         }
       }
-      // Show welcome bar and navbar user
+
       if (welcomeBar) {
         welcomeBar.innerHTML = `<span class='success-tick'>✔️</span> Welcome, ${user.displayName || "User"}!`;
         welcomeBar.style.display = 'block';
@@ -227,10 +227,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (signupModal) {
         signupModal.style.display = 'none';
       }
-      // Show dummy profile photo to the left of the name
+  
       if (dummyProfileBtn && dummyProfileImg) {
         dummyProfileBtn.style.display = 'flex';
-        // Use localStorage profileImg if set, else default avatar
+       
         const imgSrc = localStorage.getItem('profileImg') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=7b6cf6&color=fff`;
         dummyProfileImg.src = imgSrc;
       }
