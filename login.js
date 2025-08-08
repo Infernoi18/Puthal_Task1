@@ -10,7 +10,8 @@ import {
   updateProfile,
   setPersistence,
   browserLocalPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
+  sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,10 +32,77 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const loginMessage = document.getElementById("loginMessage");
   const googleSignInBtn = document.getElementById("googleSignInBtn");
+  // Reset form elements
+  const resetForm = document.getElementById("resetForm");
+  const resetEmailInput = document.getElementById("resetEmail");
+  const resetMessage = document.getElementById("resetMessage");
+  const resetSubmitBtn = document.getElementById("resetSubmitBtn");
+  const openResetLink = document.getElementById("openResetModal");
 
+  // Simple cooldown to prevent multiple reset emails rapidly
+  const COOLDOWN_SECONDS = 60;
+  let resetCooldownInterval = null;
+  const COOLDOWN_KEY = "resetCooldownUntil";
+
+  function getCooldownRemainingSeconds() {
+    const until = Number(localStorage.getItem(COOLDOWN_KEY)) || 0;
+    const now = Date.now();
+    const diffMs = until - now;
+    return diffMs > 0 ? Math.ceil(diffMs / 1000) : 0;
+  }
+
+  function clearCooldownInterval() {
+    if (resetCooldownInterval) {
+      clearInterval(resetCooldownInterval);
+      resetCooldownInterval = null;
+    }
+  }
+
+  function applyCooldownUI() {
+    const remaining = getCooldownRemainingSeconds();
+    if (!resetSubmitBtn) return;
+    if (!resetSubmitBtn.dataset.originalText) {
+      resetSubmitBtn.dataset.originalText = resetSubmitBtn.textContent || "Send Reset Link";
+    }
+    if (remaining > 0) {
+      resetSubmitBtn.disabled = true;
+      resetSubmitBtn.textContent = `Wait ${remaining}s`;
+      clearCooldownInterval();
+      resetCooldownInterval = setInterval(() => {
+        const r = getCooldownRemainingSeconds();
+        if (r > 0) {
+          resetSubmitBtn.textContent = `Wait ${r}s`;
+        } else {
+          clearCooldownInterval();
+          resetSubmitBtn.disabled = false;
+          resetSubmitBtn.textContent = resetSubmitBtn.dataset.originalText;
+        }
+      }, 1000);
+    } else {
+      clearCooldownInterval();
+      resetSubmitBtn.disabled = false;
+      resetSubmitBtn.textContent = resetSubmitBtn.dataset.originalText;
+    }
+  }
+
+  function startCooldown() {
+    const until = Date.now() + COOLDOWN_SECONDS * 1000;
+    localStorage.setItem(COOLDOWN_KEY, String(until));
+    applyCooldownUI();
+  }
+
+  // Initialize cooldown state on load
+  applyCooldownUI();
+  // Sync cooldown UI when opening the reset modal
+  if (openResetLink) {
+    openResetLink.addEventListener("click", () => {
+      setTimeout(applyCooldownUI, 0);
+    });
+  }
+  // Signup form elements
   const signupForm = document.getElementById("signupForm");
   const signupMessage = document.getElementById("signupMessage");
-
+  // Signup logic
   if (signupForm) {
     signupForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -43,13 +111,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("signupPassword")?.value;
       const confirmPassword = document.getElementById("signupConfirmPassword")?.value;
 
-
+      // Validation
       if (!name || !email || !password || !confirmPassword) {
         signupMessage.textContent = "Please fill all fields.";
         signupMessage.style.color = "red";
         return;
       }
-
+      // Email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         signupMessage.textContent = "Invalid email format.";
@@ -101,10 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
         loginMessage.innerHTML = '<span class="success-tick">✔️</span> Google sign-in successful!';
         loginMessage.style.color = "#28a745";
         setTimeout(() => {
-
           const loginModal = document.getElementById('loginModal');
           if (loginModal) loginModal.style.display = 'none';
-
           const dashboardSection = document.getElementById('dashboardSection');
           if (dashboardSection) dashboardSection.style.display = 'block';
         }, 1000);
@@ -112,6 +178,60 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Google sign-in error:", error.code, error.message);
         loginMessage.textContent = `Google sign-in failed: ${error.message}`;
         loginMessage.style.color = "red";
+      }
+    });
+  }
+
+  // Password reset logic
+  if (resetForm) {
+    resetForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      // Guard against rapid repeat requests
+      const remaining = getCooldownRemainingSeconds();
+      if (remaining > 0) {
+        if (resetMessage) {
+          resetMessage.textContent = `Please wait ${remaining}s before requesting again.`;
+          resetMessage.style.color = "#e53935";
+        }
+        applyCooldownUI();
+        return;
+      }
+      const email = resetEmailInput?.value?.trim();
+      if (!email) {
+        if (resetMessage) {
+          resetMessage.textContent = "Please enter your email.";
+          resetMessage.style.color = "red";
+        }
+        return;
+      }
+      if (resetSubmitBtn) {
+        resetSubmitBtn.disabled = true;
+        if (!resetSubmitBtn.dataset.originalText) {
+          resetSubmitBtn.dataset.originalText = resetSubmitBtn.textContent || "Send Reset Link";
+        }
+        resetSubmitBtn.textContent = "Sending...";
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        if (resetMessage) {
+          resetMessage.textContent = "If an account exists for this email, a reset link has been sent. Please check your inbox.";
+          resetMessage.style.color = "#28a745";
+        }
+        if (resetEmailInput) {
+          resetEmailInput.value = "";
+        }
+        startCooldown();
+      } catch (error) {
+        console.error("Password reset error:", error.code, error.message);
+        // Keep message generic for security
+        if (resetMessage) {
+          resetMessage.textContent = "If an account exists for this email, a reset link has been sent. Please check your inbox.";
+          resetMessage.style.color = "#28a745";
+        }
+        if (resetEmailInput) {
+          resetEmailInput.value = "";
+        }
+        startCooldown();
       }
     });
   }
@@ -132,7 +252,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loginMessage.style.color = "red";
       return;
     }
-
 
     try {
       await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
@@ -161,13 +280,13 @@ document.addEventListener("DOMContentLoaded", () => {
         loginBtn.style.display = 'none';
       }
       setTimeout(() => {
-
+        // Hide login modal if present
         const loginModal = document.getElementById('loginModal');
         if (loginModal) loginModal.style.display = 'none';
         // Show dashboard section
         const dashboardSection = document.getElementById('dashboardSection');
         if (dashboardSection) dashboardSection.style.display = 'block';
-
+        // Hide green tick after 3 seconds
         if (loginMessage) loginMessage.textContent = '';
         if (welcomeBar) welcomeBar.style.display = 'none';
       }, 3000);
@@ -208,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
           h2.textContent = `Welcome, ${user.displayName}!`;
         }
       }
-
+      // Show welcome bar and navbar user
       if (welcomeBar) {
         welcomeBar.innerHTML = `<span class='success-tick'>✔️</span> Welcome, ${user.displayName || "User"}!`;
         welcomeBar.style.display = 'block';
@@ -227,10 +346,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (signupModal) {
         signupModal.style.display = 'none';
       }
-  
+
       if (dummyProfileBtn && dummyProfileImg) {
         dummyProfileBtn.style.display = 'flex';
-       
+
         const imgSrc = localStorage.getItem('profileImg') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=7b6cf6&color=fff`;
         dummyProfileImg.src = imgSrc;
       }

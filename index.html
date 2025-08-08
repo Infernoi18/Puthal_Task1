@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puthal</title>
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
   <header class="navbar">
@@ -60,7 +61,7 @@
         <span class="bar"></span>
       </button>
     </div>
-
+  <!-- Welcome bar for logged-in user -->
   <div id="welcomeBar" class="welcome-bar" style="display:none;"></div>
   </header>
 
@@ -175,6 +176,9 @@
       <button type="submit">Login</button>
       <p id="loginMessage"></p>
     </form>
+    <div class="forgot-password">
+      <a href="#" id="openResetModal">Forgot Password?</a>
+    </div>
     <div class="or-separator">
       <span>or</span>
     </div>
@@ -183,6 +187,22 @@
     </button>
     <div class="switch-auth">Don't have an account? <a href="#" id="openSignupModal">Sign up</a></div>
   </div>
+</div>
+
+<!-- Password Reset Modal -->
+<div id="resetModal" class="modal">
+  <div class="modal-content reset-modal-content">
+    <span class="close-modal" id="closeResetModal">&times;</span>
+    <h2>Reset Password</h2>
+    <p class="reset-helper-text">Enter your registered email address and we'll send you a link to reset your password.</p>
+    <form id="resetForm">
+      <input type="email" id="resetEmail" placeholder="Email" required />
+      <button type="submit" id="resetSubmitBtn">Send Reset Link</button>
+      <p id="resetMessage"></p>
+    </form>
+    <button id="backToLoginFromReset" class="back-to-login-btn">Back to Login</button>
+  </div>
+  
 </div>
 
 
@@ -282,9 +302,8 @@
     </div>
   </footer>
 
-  
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function() {
       const dummyProfileBtn = document.getElementById('dummyProfileBtn');
       const navbarUser = document.getElementById('navbarUser');
       const profileModal = document.getElementById('profileModal');
@@ -299,7 +318,7 @@
       const loginModal = document.getElementById('loginModal');
       const openLoginModalBtn = document.getElementById('openLoginModal');
 
-
+      // Open login modal from navbar
       if (openLoginModalBtn && loginModal) {
         openLoginModalBtn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -309,20 +328,16 @@
 
       
       function openProfileModal(e) {
-       
         if (profileModal.style.display === 'flex') return;
         profileModal.style.display = 'flex';
-
         profileName.value = localStorage.getItem('profileName') || (navbarUser ? navbarUser.textContent : '') || 'User';
         profileBio.value = localStorage.getItem('profileBio') || '';
-
         const imgSrc = localStorage.getItem('profileImg') || (dummyProfileImg ? dummyProfileImg.src : profileModalImg.src);
         profileModalImg.src = imgSrc;
         if (e) e.stopPropagation();
       }
       if (dummyProfileBtn) dummyProfileBtn.addEventListener('click', openProfileModal);
       if (navbarUser) navbarUser.addEventListener('click', openProfileModal);
-
 
       if (closeProfileModal) closeProfileModal.addEventListener('click', function(e) {
         profileModal.style.display = 'none';
@@ -367,7 +382,7 @@
         });
       }
 
-
+ 
       if (profileForm) profileForm.addEventListener('submit', function(e) {
         e.preventDefault();
         localStorage.setItem('profileName', profileName.value);
@@ -386,7 +401,11 @@
       var signupModal = document.getElementById('signupModal');
       var closeSignupBtn = document.getElementById('closeSignupModal');
       var openLoginFromSignup = document.getElementById('openLoginModalFromSignup');
-
+  // Reset password modal elements
+  var resetModal = document.getElementById('resetModal');
+  var closeResetBtn = document.getElementById('closeResetModal');
+  var openResetLink = document.getElementById('openResetModal');
+  var backToLoginFromReset = document.getElementById('backToLoginFromReset');
 
       if (openSignupLink && signupModal && loginModal) {
         openSignupLink.addEventListener('click', function(e) {
@@ -409,10 +428,37 @@
           loginModal.style.display = 'none';
         });
       }
- 
+
       if (closeSignupBtn && signupModal) {
         closeSignupBtn.addEventListener('click', function() {
           signupModal.style.display = 'none';
+        });
+      }
+
+      // Open Reset modal from Login
+      if (openResetLink && resetModal && loginModal) {
+        openResetLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          loginModal.style.display = 'none';
+          resetModal.style.display = 'flex';
+          // Focus email
+          var resetEmail = document.getElementById('resetEmail');
+          if (resetEmail) resetEmail.focus();
+        });
+      }
+
+      // Close Reset modal
+      if (closeResetBtn && resetModal) {
+        closeResetBtn.addEventListener('click', function() {
+          resetModal.style.display = 'none';
+        });
+      }
+
+      // Back to Login from Reset
+      if (backToLoginFromReset && resetModal && loginModal) {
+        backToLoginFromReset.addEventListener('click', function() {
+          resetModal.style.display = 'none';
+          loginModal.style.display = 'flex';
         });
       }
 
@@ -422,6 +468,9 @@
         }
         if (event.target === signupModal) {
           signupModal.style.display = 'none';
+        }
+        if (event.target === resetModal) {
+          resetModal.style.display = 'none';
         }
       });
     });

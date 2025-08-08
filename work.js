@@ -1,3 +1,4 @@
+
 function setupHamburgerMenu() {
   const menuToggle = document.querySelector('.menu-toggle');
   const navLinks = document.querySelector('.nav-links');
@@ -8,7 +9,7 @@ function setupHamburgerMenu() {
   }
 }
 
-
+// Navbar link click handlers
 function setupNavbarLinks() {
   const navLinks = document.querySelectorAll('.nav-links a');
   navLinks.forEach(link => {
@@ -51,7 +52,7 @@ function setupNavbarLinks() {
   });
 }
 
-
+// Footer link click handlers
 function setupFooterLinks() {
   const footer = document.querySelector('footer');
   if (!footer) return;
@@ -68,7 +69,7 @@ function setupFooterLinks() {
       }
     });
   });
-  // SupportLinks
+
   const supportLinks = footer.querySelectorAll('.support-links a');
   supportLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -90,7 +91,7 @@ function setupFooterLinks() {
   });
 }
 
-// Auth form handling
+
 function setupAuthForm() {
   const signInForm = document.getElementById('signInForm');
   const authMessage = document.getElementById('authMessage');
@@ -100,7 +101,7 @@ function setupAuthForm() {
       authMessage.textContent = '';
       const email = document.getElementById('signInEmail').value.trim();
       const password = document.getElementById('signInPassword').value;
-  
+
       if (email && password) {
         authMessage.style.color = '#28a745';
         authMessage.textContent = 'Signed in successfully! (Demo: connect to Firebase)';
@@ -113,7 +114,7 @@ function setupAuthForm() {
 }
 
 
-
+// Modal login logic (no authentication here)
 const loginModal = document.getElementById('loginModal');
 const openLoginModalBtn = document.getElementById('openLoginModal');
 const closeLoginModalBtn = document.getElementById('closeLoginModal');

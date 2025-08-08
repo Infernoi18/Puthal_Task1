@@ -1,9 +1,9 @@
-
+/* Profile Modal Button Row */
 .profile-modal-btn-row {
   display: flex;
   gap: 0.7rem;
 }
-
+/* Remove Photo button style */
 .remove-profile-img-btn {
   background: #f43f5e !important;
   color: #fff;
@@ -11,7 +11,7 @@
 .remove-profile-img-btn:hover {
   background: #d90429 !important;
 }
-
+/* Dummy Profile Button & Group Polishing */
 .navbar-profile-group {
   display: flex;
   align-items: center;
@@ -50,7 +50,7 @@
   background: #f3f4f6;
 }
 
-
+/* Profile Modal Polishing */
 #profileModal {
   display: none;
   z-index: 2000;
@@ -148,7 +148,7 @@
   background: linear-gradient(90deg,#6346fa 10%,#7b6cf6 100%);
 }
 
-
+/* Hide file input visually but keep accessible */
 #profileImgInput {
   position: absolute;
   left: -9999px;
@@ -179,7 +179,7 @@
     height: 60px;
   }
 }
-
+/* Welcome Bar for Logged-in User */
 
 .welcome-bar {
   width: 100vw;
@@ -234,7 +234,7 @@
   100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 
-
+/* Navbar User Display */
 .navbar-user {
   display: none;
   color: #6346fa;
@@ -244,7 +244,7 @@
   letter-spacing: 0.5px;
   align-self: center;
 }
-
+/* Switch Auth Links (Login/Signup) */
 .switch-auth {
   text-align: center;
   margin-top: 1.1rem;
@@ -261,7 +261,7 @@
 .switch-auth a:hover {
   color: #6346fa;
 }
-
+/* Dashboard Mood Blocks */
 .dashboard-moods {
   display: flex;
   justify-content: space-between;
@@ -315,7 +315,7 @@
   }
 }
 
-
+/* Dashboard Logout Button */
 .dashboard-logout-btn {
   display: inline-block;
   margin: 1.5rem auto 0 auto;
@@ -334,7 +334,7 @@
   background: linear-gradient(90deg,#fbbf24 10%,#f43f5e 100%);
   box-shadow: 0 4px 16px rgba(244,63,94,0.13);
 }
-
+/* Google Sign-In Button Styles */
 .google-signin-btn {
   display: flex;
   align-items: center;
@@ -361,7 +361,7 @@
   margin-right: 8px;
 }
 
-
+/* Or Separator Styles */
 .or-separator {
   display: flex;
   align-items: center;
@@ -381,8 +381,13 @@
   border-bottom: 1px solid #eee;
   margin: 0 4px;
 }
-
+/* Forgot Password link */
+.forgot-password { margin-top: 8px; text-align: right; }
+.forgot-password a { color: #6366f1; text-decoration: none; font-size: 0.9rem; }
+.forgot-password a:hover { text-decoration: underline; }
+/* Hide modal and dashboard by default */
 #loginModal,
+#resetModal,
 #dashboardSection {
   display: none;
 }
@@ -498,7 +503,7 @@ body {
   transition: all 0.3s;
 }
 
-
+/* NAV RESPONSIVENESS */
 @media (max-width: 900px) {
   .nav-links {
     position: fixed;
@@ -982,6 +987,16 @@ footer {
 .close-modal:hover {
   color: #6346fa;
 }
+
+/* Reset Modal specific tweaks */
+.reset-modal-content { max-width: 420px; width: 92%; }
+.reset-helper-text { color: #666; font-size: 0.95rem; margin: 8px 0 14px; }
+#resetForm input[type="email"] { width: 100%; padding: 10px 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; background: rgba(238,238,250,0.3); }
+#resetSubmitBtn { width: 100%; background: #6366f1; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+#resetSubmitBtn:hover { background: #5457e6; }
+#resetMessage { min-height: 20px; margin-top: 8px; text-align: center; }
+.back-to-login-btn { margin-top: 12px; width: 100%; background: #f3f4f6; color: #111827; border: 1px solid #e5e7eb; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+.back-to-login-btn:hover { background: #e5e7eb; }
 
 @media (max-width: 600px) {
   .modal-content { padding: 1.1rem 0.5rem 1rem 0.5rem; }
