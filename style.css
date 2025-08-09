@@ -391,12 +391,6 @@
 #dashboardSection {
   display: none;
 }
-
-/* Prevent FOUC (Flash of Unstyled Content) */
-body {
-  visibility: hidden;
-}
-
 :root {
   --purple: #7b6cf6;
   --text: #222;
