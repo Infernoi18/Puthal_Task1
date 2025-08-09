@@ -14,20 +14,31 @@ import {
   sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+// Ensure page is fully loaded before initializing
+window.addEventListener("load", () => {
+  document.body.style.visibility = "visible";
+});
+
 document.addEventListener("DOMContentLoaded", () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyDnAVJ7Imx-KPa2EV8PsOzFKXEYDh6aCIA",
-    authDomain: "puthal1.firebaseapp.com",
-    projectId: "puthal1",
-    storageBucket: "puthal1.appspot.com",
-    messagingSenderId: "514414880888",
-    appId: "1:514414880888:web:e0f9c2f20b661dee99e58d"
-  };
+  try {
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnAVJ7Imx-KPa2EV8PsOzFKXEYDh6aCIA",
+      authDomain: "puthal1.firebaseapp.com",
+      projectId: "puthal1",
+      storageBucket: "puthal1.appspot.com",
+      messagingSenderId: "514414880888",
+      appId: "1:514414880888:web:e0f9c2f20b661dee99e58d"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  console.log("Firebase initialized");
+    console.log("Firebase initialized successfully");
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    // Ensure page still loads even if Firebase fails
+    document.body.style.visibility = "visible";
+  }
 
   const loginForm = document.getElementById("loginForm");
   const loginMessage = document.getElementById("loginMessage");
@@ -308,61 +319,66 @@ document.addEventListener("DOMContentLoaded", () => {
   function hideDashboard() {
     if (dashboardSection) dashboardSection.style.display = 'none';
   }
+  
   onAuthStateChanged(auth, (user) => {
-    console.log("onAuthStateChanged user:", user);
-    const welcomeBar = document.getElementById('welcomeBar');
-    const navbarUser = document.getElementById('navbarUser');
-    const loginBtn = document.querySelector('.login-btn');
-    const loginModal = document.getElementById('loginModal');
-    const signupModal = document.getElementById('signupModal');
-    const dummyProfileBtn = document.getElementById('dummyProfileBtn');
-    const dummyProfileImg = document.getElementById('dummyProfileImg');
-    if (user) {
-      showDashboard();
+    try {
+      console.log("onAuthStateChanged user:", user);
+      const welcomeBar = document.getElementById('welcomeBar');
+      const navbarUser = document.getElementById('navbarUser');
+      const loginBtn = document.querySelector('.login-btn');
+      const loginModal = document.getElementById('loginModal');
+      const signupModal = document.getElementById('signupModal');
+      const dummyProfileBtn = document.getElementById('dummyProfileBtn');
+      const dummyProfileImg = document.getElementById('dummyProfileImg');
+      if (user) {
+        showDashboard();
 
-      const dashboardSection = document.getElementById('dashboardSection');
-      if (dashboardSection) {
-        const h2 = dashboardSection.querySelector('h2');
-        if (h2 && user.displayName) {
-          h2.textContent = `Welcome, ${user.displayName}!`;
+        const dashboardSection = document.getElementById('dashboardSection');
+        if (dashboardSection) {
+          const h2 = dashboardSection.querySelector('h2');
+          if (h2 && user.displayName) {
+            h2.textContent = `Welcome, ${user.displayName}!`;
+          }
+        }
+        // Show welcome bar and navbar user
+        if (welcomeBar) {
+          welcomeBar.innerHTML = `<span class='success-tick'>✔️</span> Welcome, ${user.displayName || "User"}!`;
+          welcomeBar.style.display = 'block';
+          setTimeout(() => { welcomeBar.style.display = 'none'; }, 3000);
+        }
+        if (navbarUser) {
+          navbarUser.textContent = user.displayName || "User";
+          navbarUser.style.display = 'block';
+        }
+        if (loginBtn) {
+          loginBtn.style.display = 'none';
+        }
+        if (loginModal) {
+          loginModal.style.display = 'none';
+        }
+        if (signupModal) {
+          signupModal.style.display = 'none';
+        }
+
+        if (dummyProfileBtn && dummyProfileImg) {
+          dummyProfileBtn.style.display = 'flex';
+
+          const imgSrc = localStorage.getItem('profileImg') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=7b6cf6&color=fff`;
+          dummyProfileImg.src = imgSrc;
+        }
+      } else {
+        hideDashboard();
+        if (welcomeBar) welcomeBar.style.display = 'none';
+        if (navbarUser) navbarUser.style.display = 'none';
+        if (loginBtn) {
+          loginBtn.style.display = '';
+        }
+        if (dummyProfileBtn) {
+          dummyProfileBtn.style.display = 'none';
         }
       }
-      // Show welcome bar and navbar user
-      if (welcomeBar) {
-        welcomeBar.innerHTML = `<span class='success-tick'>✔️</span> Welcome, ${user.displayName || "User"}!`;
-        welcomeBar.style.display = 'block';
-        setTimeout(() => { welcomeBar.style.display = 'none'; }, 3000);
-      }
-      if (navbarUser) {
-        navbarUser.textContent = user.displayName || "User";
-        navbarUser.style.display = 'block';
-      }
-      if (loginBtn) {
-        loginBtn.style.display = 'none';
-      }
-      if (loginModal) {
-        loginModal.style.display = 'none';
-      }
-      if (signupModal) {
-        signupModal.style.display = 'none';
-      }
-
-      if (dummyProfileBtn && dummyProfileImg) {
-        dummyProfileBtn.style.display = 'flex';
-
-        const imgSrc = localStorage.getItem('profileImg') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=7b6cf6&color=fff`;
-        dummyProfileImg.src = imgSrc;
-      }
-    } else {
-      hideDashboard();
-      if (welcomeBar) welcomeBar.style.display = 'none';
-      if (navbarUser) navbarUser.style.display = 'none';
-      if (loginBtn) {
-        loginBtn.style.display = '';
-      }
-      if (dummyProfileBtn) {
-        dummyProfileBtn.style.display = 'none';
-      }
+    } catch (error) {
+      console.error("Auth state change error:", error);
     }
   });
   if (logoutBtn) {
