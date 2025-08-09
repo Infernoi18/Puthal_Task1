@@ -15,9 +15,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Detect if running on GitHub Pages
+  const isGitHubPages = window.location.hostname.includes('github.io');
+  
   const firebaseConfig = {
     apiKey: "AIzaSyDnAVJ7Imx-KPa2EV8PsOzFKXEYDh6aCIA",
-    authDomain: "puthal1.firebaseapp.com",
+    authDomain: isGitHubPages ? "puthal1.firebaseapp.com" : "puthal1.firebaseapp.com",
     projectId: "puthal1",
     storageBucket: "puthal1.appspot.com",
     messagingSenderId: "514414880888",
@@ -176,7 +179,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000);
       } catch (error) {
         console.error("Google sign-in error:", error.code, error.message);
-        loginMessage.textContent = `Google sign-in failed: ${error.message}`;
+        let errorMsg = error.message;
+        if (error.code === 'auth/unauthorized-domain') {
+          errorMsg = 'This domain is not authorized for Google sign-in. Please contact support.';
+        } else if (error.code === 'auth/popup-blocked') {
+          errorMsg = 'Popup was blocked. Please allow popups and try again.';
+        } else if (error.code === 'auth/popup-closed-by-user') {
+          errorMsg = 'Sign-in was cancelled. Please try again.';
+        }
+        loginMessage.textContent = `Google sign-in failed: ${errorMsg}`;
         loginMessage.style.color = "red";
       }
     });
